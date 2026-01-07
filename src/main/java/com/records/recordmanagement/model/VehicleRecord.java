@@ -9,6 +9,7 @@ public class VehicleRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Double totalAmount;
 
     // who sent the vehicle (supplier / customer)
     private String customerName;
@@ -89,5 +90,12 @@ public class VehicleRecord {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }
