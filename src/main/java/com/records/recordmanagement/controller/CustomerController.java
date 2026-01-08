@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/customers")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CustomerController {
     private final CustomerRepository customerRepository;
 
@@ -15,8 +16,13 @@ public class CustomerController {
         this.customerRepository = customerRepository;
     }
 
-    @PostMapping
+    /*@PostMapping
     public Customer createCustomer(@RequestBody Customer customer) {
+        return customerRepository.save(customer);
+    }
+*/
+    @PostMapping
+    public Customer saveCustomer(@RequestBody Customer customer) {
         return customerRepository.save(customer);
     }
 
@@ -24,4 +30,19 @@ public class CustomerController {
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
+    @PutMapping("/{id}")
+    public Customer updateCustomer(@PathVariable Long id, @RequestBody Customer updated) {
+        Customer c = customerRepository.findById(id).orElseThrow();
+        c.setName(updated.getName());
+        c.setPhone(updated.getPhone());
+        c.setAddress(updated.getAddress());
+        c.setNotes(updated.getNotes());
+        return customerRepository.save(c);
+    }
+    @DeleteMapping("/{id}")
+    public void deleteCustomer(@PathVariable Long id) {
+        customerRepository.deleteById(id);
+    }
+
+
 }

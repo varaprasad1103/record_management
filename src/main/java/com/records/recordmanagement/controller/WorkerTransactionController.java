@@ -30,6 +30,7 @@ public class WorkerTransactionController {
                 .map(t -> {
                     t.setWorkerName(updated.getWorkerName());
                     t.setDate(updated.getDate());
+                    t.setWorkerType(updated.getWorkerType());
                     t.setType(updated.getType());
                     t.setAmount(updated.getAmount());
                     t.setDescription(updated.getDescription());

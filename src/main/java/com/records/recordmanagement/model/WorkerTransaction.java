@@ -1,6 +1,7 @@
 package com.records.recordmanagement.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "worker_transaction")
@@ -12,15 +13,20 @@ public class WorkerTransaction {
 
     private String workerName;
 
-    private String date;
+    private String workerType;
 
-    private String type;  // CREDIT, DEBIT, ADVANCE, SALARY, OTHER
+    private LocalDate date;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;
 
     private Double amount;
 
     private String description;
 
     public WorkerTransaction() {}
+
+    // ===== GETTERS & SETTERS =====
 
     public Long getId() {
         return id;
@@ -38,19 +44,27 @@ public class WorkerTransaction {
         this.workerName = workerName;
     }
 
-    public String getDate() {
+    public String getWorkerType() {
+        return workerType;
+    }
+
+    public void setWorkerType(String workerType) {
+        this.workerType = workerType;
+    }
+
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TransactionType type) {
         this.type = type;
     }
 
