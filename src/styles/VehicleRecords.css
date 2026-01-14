@@ -1,0 +1,102 @@
+.vehicle-container {
+  padding: 24px;
+}
+
+.vehicle-container h2 {
+  margin-bottom: 16px;
+}
+
+.vehicle-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.vehicle-form input {
+  padding: 8px 10px;
+  min-width: 140px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.vehicle-form button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.vehicle-form button[type="submit"] {
+  background-color: #1976d2;
+  color: white;
+}
+
+.vehicle-form .cancel-btn {
+  background-color: #777;
+  color: white;
+}
+
+.vehicle-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.vehicle-table th,
+.vehicle-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.vehicle-table th {
+  background-color: #f2f2f2;
+}
+
+.vehicle-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.action-btn {
+  margin: 0 4px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: #ffa000;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #d32f2f;
+  color: white;
+}
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.filter-bar input {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.export-btn {
+  padding: 8px 14px;
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.pdf-btn {
+  background-color: #c62828;
+  margin-left: 8px;
+}
+

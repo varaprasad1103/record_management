@@ -1,0 +1,78 @@
+.worker-container {
+  padding: 24px;
+}
+
+.worker-container h2 {
+  margin-bottom: 16px;
+}
+
+.worker-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.worker-form input,
+.worker-form select {
+  padding: 8px 10px;
+  min-width: 140px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.worker-form button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.worker-form button[type="submit"] {
+  background-color: #1976d2;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #777;
+  color: white;
+}
+
+.worker-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.worker-table th,
+.worker-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.worker-table th {
+  background-color: #f2f2f2;
+}
+
+.worker-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.action-btn {
+  margin: 0 4px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: #ffa000;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #d32f2f;
+  color: white;
+}
