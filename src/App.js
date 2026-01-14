@@ -18,6 +18,8 @@ import RiceMill from "./pages/RiceMills";
 import SourceDispatch from "./pages/SourceDispatch";
 import DestinationDispatch from "./pages/DestinationDispatch";
 import VehicleRecords from "./pages/VehicleRecords";
+import RiceMillDetails from "./pages/RiceMillDetails";
+
 
 import "./App.css";
 
@@ -28,6 +30,8 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(
     localStorage.getItem("loggedIn") === "true"
   );
+  const [selectedMillId, setSelectedMillId] = useState(null);
+
 
   if (!loggedIn) {
     return <Login onLogin={() => setLoggedIn(true)} />;
@@ -77,8 +81,8 @@ function App() {
             localStorage.clear();
             setLoggedIn(false);
           }}>
-  Logout
-</div>
+            Logout
+          </div>
 
 
         </div>
@@ -87,10 +91,24 @@ function App() {
       {/* MAIN CONTENT */}
       <div className="main-content">
         {page === "dashboard" && <Dashboard />}
-        {page === "ricemill" && <RiceMill />}
+        {page === "ricemill" && (
+          <RiceMill
+            openMill={(id) => {
+              setSelectedMillId(id);
+              setPage("ricemill-details");
+            }}
+          />
+        )}
+        {page === "ricemill-details" && (
+          <RiceMillDetails
+            millId={selectedMillId}
+            goBack={() => setPage("ricemill")}
+          />
+        )}
         {page === "source" && <SourceDispatch />}
         {page === "destination" && <DestinationDispatch />}
         {page === "vehicle" && <VehicleRecords />}
+
       </div>
     </div>
   );
