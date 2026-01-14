@@ -1,3 +1,4 @@
+/*
 package com.records.recordmanagement.repository;
 
 import com.records.recordmanagement.model.VehicleRecord;
@@ -21,3 +22,4 @@ public interface VehicleRecordRepository extends JpaRepository<VehicleRecord, Lo
     @Query("SELECT SUM(v.totalAmount) FROM VehicleRecord v WHERE v.date = :date")
     Double getTotalAmountByDate(String date);
 }
+*/

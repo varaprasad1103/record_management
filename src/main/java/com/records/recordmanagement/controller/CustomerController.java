@@ -1,6 +1,7 @@
+/*
 package com.records.recordmanagement.controller;
 
-import com.records.recordmanagement.model.Customer;
+import com.records.recordmanagement.model.User;
 import com.records.recordmanagement.repository.CustomerRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,23 +17,25 @@ public class CustomerController {
         this.customerRepository = customerRepository;
     }
 
-    /*@PostMapping
+    */
+/*@PostMapping
     public Customer createCustomer(@RequestBody Customer customer) {
         return customerRepository.save(customer);
     }
-*/
+*//*
+
     @PostMapping
-    public Customer saveCustomer(@RequestBody Customer customer) {
+    public User saveCustomer(@RequestBody User customer) {
         return customerRepository.save(customer);
     }
 
     @GetMapping
-    public List<Customer> getAllCustomers() {
+    public List<User> getAllCustomers() {
         return customerRepository.findAll();
     }
     @PutMapping("/{id}")
-    public Customer updateCustomer(@PathVariable Long id, @RequestBody Customer updated) {
-        Customer c = customerRepository.findById(id).orElseThrow();
+    public User updateCustomer(@PathVariable Long id, @RequestBody User updated) {
+        User c = customerRepository.findById(id).orElseThrow();
         c.setName(updated.getName());
         c.setPhone(updated.getPhone());
         c.setAddress(updated.getAddress());
@@ -46,3 +49,4 @@ public class CustomerController {
 
 
 }
+*/

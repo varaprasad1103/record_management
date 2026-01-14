@@ -1,3 +1,4 @@
+/*
 package com.records.recordmanagement.model;
 
 import jakarta.persistence.*;
@@ -99,3 +100,4 @@ public class VehicleRecord {
         this.totalAmount = totalAmount;
     }
 }
+*/

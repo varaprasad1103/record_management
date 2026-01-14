@@ -17,18 +17,14 @@ public class SourceDispatch {
     private RiceMill riceMill;
 
     private LocalDate date;
-
     private String vehicleNo;
 
     private Double quantity;
-
     private Double rate;
-
     private Double totalAmount;
 
     public SourceDispatch() {
     }
-
     // ===== Getters & Setters =====
 
     public Long getId() {

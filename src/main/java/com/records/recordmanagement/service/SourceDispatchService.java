@@ -18,16 +18,67 @@ public class SourceDispatchService {
         this.sourceDispatchRepository = sourceDispatchRepository;
         this.riceMillRepository = riceMillRepository;
     }
+    public SourceDispatch update(Long id, SourceDispatch updated) {
+        return sourceDispatchRepository.findById(id)
+                .map(d -> {
+
+                    double oldTotal = d.getTotalAmount();
+
+                    double newTotal = updated.getQuantity() * updated.getRate();
+
+                    RiceMill riceMill = riceMillRepository.findById(
+                            updated.getRiceMill().getId()
+                    ).orElseThrow(() -> new RuntimeException("RiceMill not found"));
+
+                    double advance = riceMill.getAdvanceAmount();
+                    double balance = riceMill.getBalanceAmount();
+
+                    double diff = newTotal - oldTotal;
+
+                    if (diff > 0) {
+                        if (advance >= diff) {
+                            riceMill.setAdvanceAmount(advance - diff);
+                        } else {
+                            riceMill.setBalanceAmount(balance + (diff - advance));
+                            riceMill.setAdvanceAmount(0.0);
+                        }
+                    } else if (diff < 0) {
+                        riceMill.setAdvanceAmount(advance + Math.abs(diff));
+                    }
+
+                    riceMillRepository.save(riceMill);
+
+                    d.setDate(updated.getDate());
+                    d.setVehicleNo(updated.getVehicleNo());
+                    d.setQuantity(updated.getQuantity());
+                    d.setRate(updated.getRate());
+                    d.setTotalAmount(newTotal);
+                    d.setRiceMill(riceMill);
+
+                    return sourceDispatchRepository.save(d);
+                })
+                .orElseThrow(() -> new RuntimeException("Dispatch not found"));
+    }
+
+
 
     @Transactional
     public SourceDispatch saveSourceDispatch(SourceDispatch dispatch) {
 
-        RiceMill riceMill = dispatch.getRiceMill();
+        // 1️⃣ Calculate total
+        double total = dispatch.getQuantity() * dispatch.getRate();
+        dispatch.setTotalAmount(total);
 
-        double total = dispatch.getTotalAmount();
+        // 2️⃣ Always fetch RiceMill from DB
+        Long riceMillId = dispatch.getRiceMill().getId();
+
+        RiceMill riceMill = riceMillRepository.findById(riceMillId)
+                .orElseThrow(() -> new RuntimeException("RiceMill not found"));
+
         double advance = riceMill.getAdvanceAmount();
         double balance = riceMill.getBalanceAmount();
 
+        // 3️⃣ Adjust financials
         if (advance >= total) {
             riceMill.setAdvanceAmount(advance - total);
         } else {
@@ -36,10 +87,13 @@ public class SourceDispatchService {
             riceMill.setAdvanceAmount(0.0);
         }
 
-        // Save updated ricemill first
+        // 4️⃣ Save RiceMill safely
         riceMillRepository.save(riceMill);
 
-        // Save source dispatch
+        // 5️⃣ Attach managed RiceMill to dispatch
+        dispatch.setRiceMill(riceMill);
+
+        // 6️⃣ Save dispatch
         return sourceDispatchRepository.save(dispatch);
     }
 }

@@ -11,19 +11,17 @@ public class RiceMill {
     private Long id;
 
     private String name;
+    private String location;
 
-    private String place;
+    // Total advance given to this mill
+    private Double advanceAmount = 0.0;
 
-    private Double advanceAmount;
+    // Current balance (calculated & updated via logic)
+    private Double balanceAmount = 0.0;
 
-    private Double balanceAmount;
+    public RiceMill() {}
 
-    private String paymentMethod;
-
-    public RiceMill() {
-    }
-
-    // ===== Getters & Setters =====
+    // ===== getters & setters =====
 
     public Long getId() {
         return id;
@@ -41,12 +39,12 @@ public class RiceMill {
         this.name = name;
     }
 
-    public String getPlace() {
-        return place;
+    public String getLocation() {
+        return location;
     }
 
-    public void setPlace(String place) {
-        this.place = place;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Double getAdvanceAmount() {
@@ -63,13 +61,5 @@ public class RiceMill {
 
     public void setBalanceAmount(Double balanceAmount) {
         this.balanceAmount = balanceAmount;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
     }
 }
