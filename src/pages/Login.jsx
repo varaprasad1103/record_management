@@ -6,19 +6,41 @@ function Login({ onLogin }) {
   const [showSignup, setShowSignup] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    const res = await fetch("http://localhost:8080/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
-    });
+    if (!username || !password) {
+      alert("Enter username and password");
+      return;
+    }
 
-    if (res.ok) {
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      });
+
+      if (!res.ok) {
+        throw new Error("Invalid credentials");
+      }
+
+      const token = await res.text();
+
+      // ✅ store token
+      localStorage.setItem("token", token);
       localStorage.setItem("loggedIn", "true");
+
       onLogin();
-    } else {
+    } catch (err) {
       alert("Invalid username or password");
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,7 +66,9 @@ function Login({ onLogin }) {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button onClick={handleLogin}>Login</button>
+        <button onClick={handleLogin} disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
         <p>
           New user?{" "}

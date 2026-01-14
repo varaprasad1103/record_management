@@ -8,22 +8,37 @@ function Signup({ onBackToLogin }) {
     role: "ADMIN"
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
-    const res = await fetch("http://localhost:8080/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form)
-    });
+    if (!form.username || !form.password) {
+      alert("Username and password required");
+      return;
+    }
 
-    if (res.ok) {
-      alert("Signup successful");
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:8080/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form)
+      });
+
+      if (!res.ok) {
+        throw new Error("Signup failed");
+      }
+
+      alert("Signup successful. Please login.");
       onBackToLogin();
-    } else {
-      alert("Signup failed");
+    } catch (err) {
+      alert("Signup failed. Username may already exist.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,7 +62,9 @@ function Signup({ onBackToLogin }) {
           onChange={handleChange}
         />
 
-        <button onClick={handleSubmit}>Register</button>
+        <button onClick={handleSubmit} disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
 
         <p>
           Already have account?{" "}
