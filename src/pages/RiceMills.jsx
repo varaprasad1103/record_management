@@ -43,6 +43,14 @@ function RiceMills({ openMill }) {
     });
   };
 
+  const deleteMill = (id) => {
+    if (!window.confirm("Are you sure you want to delete this rice mill?")) return;
+
+    fetch(`http://localhost:8080/ricemills/${id}`, {
+      method: "DELETE"
+    }).then(() => loadMills());
+  };
+
   return (
     <div className="ricemill-container">
 
@@ -75,7 +83,7 @@ function RiceMills({ openMill }) {
             <th>ID</th>
             <th>Name</th>
             <th>Location</th>
-            <th>Open</th>
+            <th>Actions</th>
           </tr>
         </thead>
 
@@ -85,12 +93,19 @@ function RiceMills({ openMill }) {
               <td>{m.id}</td>
               <td>{m.name}</td>
               <td>{m.location}</td>
-              <td>
+              <td className="action-col">
                 <button
-                  className="action-btn edit-btn"
+                  className="action-btn open-btn"
                   onClick={() => openMill(m.id)}
                 >
                   Open
+                </button>
+
+                <button
+                  className="action-btn delete-btn"
+                  onClick={() => deleteMill(m.id)}
+                >
+                  Delete
                 </button>
               </td>
             </tr>
