@@ -29,21 +29,21 @@ function RiceMillDetails({ millId, goBack }) {
   };
 
   const loadRecords = async () => {
-    const res = await fetch(`${API}/source-dispatch/ricemill/${millId}`);
+    const res = await fetch(`${API}/source-dispatch/ricemill/${millId}/all`);
     setRecords(await res.json());
   };
 
   const loadAdvances = async () => {
-  const res = await fetch(`${API}/ricemills/${millId}/advances`);
-  const data = await res.json();
+    const res = await fetch(`${API}/ricemills/${millId}/advances`);
+    const data = await res.json();
 
-  console.log("ADVANCES FROM API:", data);
+    console.log("ADVANCES FROM API:", data);
 
-  setAdvances(data);
+    setAdvances(data);
 
-  const total = data.reduce((sum, a) => sum + Number(a.amount || 0), 0);
-  setAdvanceTotal(total);
-};
+    const total = data.reduce((sum, a) => sum + Number(a.amount || 0), 0);
+    setAdvanceTotal(total);
+  };
 
 
   const loadAll = async () => {
