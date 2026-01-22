@@ -2,6 +2,8 @@ package com.records.recordmanagement.controller;
 
 import com.records.recordmanagement.model.VehicleRecords;
 import com.records.recordmanagement.repository.VehiclesRecordRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -20,8 +22,18 @@ public class VehicleRecordsController {
 
     // ✅ LIST ALL
     @GetMapping
-    public List<VehicleRecords> getAll() {
-        return vehiclesRecordRepository.findAll();
+    public ResponseEntity<?> getAll() {
+        try {
+            List<VehicleRecords> records = vehiclesRecordRepository.findAll();
+            System.out.println("✅ Successfully fetched " + records.size() + " vehicle records");
+            return ResponseEntity.ok(records);
+        } catch (Exception e) {
+            System.err.println("❌ Error fetching vehicle records:");
+            e.printStackTrace();
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
     }
 
     // ✅ FILTER BY DATE

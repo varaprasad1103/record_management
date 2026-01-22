@@ -1,10 +1,12 @@
 package com.records.recordmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "vehicle_record")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class VehicleRecords{
 
     @Id
@@ -12,13 +14,15 @@ public class VehicleRecords{
     private Long id;
 
     // 🔗 Link to SourceDispatch
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "source_dispatch_id", nullable = false)
+    @JsonIgnoreProperties({"riceMill"})
     private SourceDispatch sourceDispatch;
 
     // 🔗 Link to DestinationDispatch
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "destination_dispatch_id", nullable = false)
+    @JsonIgnoreProperties({"vehicleRecords", "customer"})
     private DestinationDispatch destinationDispatch;
 
     private LocalDate date;

@@ -18,9 +18,15 @@ public class SourceDispatchService {
         this.sourceDispatchRepository = sourceDispatchRepository;
         this.riceMillRepository = riceMillRepository;
     }
+
     public SourceDispatch update(Long id, SourceDispatch updated) {
         return sourceDispatchRepository.findById(id)
                 .map(d -> {
+
+                    // ✅ Prevent updating already dispatched records
+                    if (d.getIsDispatched()) {
+                        throw new RuntimeException("Cannot update a dispatched record");
+                    }
 
                     double oldTotal = d.getTotalAmount();
 
@@ -60,8 +66,6 @@ public class SourceDispatchService {
                 .orElseThrow(() -> new RuntimeException("Dispatch not found"));
     }
 
-
-
     @Transactional
     public SourceDispatch saveSourceDispatch(SourceDispatch dispatch) {
 
@@ -92,6 +96,9 @@ public class SourceDispatchService {
 
         // 5️⃣ Attach managed RiceMill to dispatch
         dispatch.setRiceMill(riceMill);
+
+        // ✅ Set as not dispatched by default
+        dispatch.setIsDispatched(false);
 
         // 6️⃣ Save dispatch
         return sourceDispatchRepository.save(dispatch);

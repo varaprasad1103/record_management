@@ -1,10 +1,12 @@
 package com.records.recordmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "source_dispatch")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SourceDispatch {
 
     @Id
@@ -12,8 +14,9 @@ public class SourceDispatch {
     private Long id;
 
     // 🔗 Relationship to Ricemill (MANDATORY)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ricemill_id", nullable = false)
+    @JsonIgnoreProperties({"sourceDispatches", "advances"})
     private RiceMill riceMill;
 
     private LocalDate date;
@@ -23,8 +26,12 @@ public class SourceDispatch {
     private Double rate;
     private Double totalAmount;
 
+    @Column(name = "is_dispatched", nullable = false)
+    private Boolean isDispatched = false;
+
     public SourceDispatch() {
     }
+
     // ===== Getters & Setters =====
 
     public Long getId() {
@@ -81,5 +88,13 @@ public class SourceDispatch {
 
     public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public Boolean getIsDispatched() {
+        return isDispatched;
+    }
+
+    public void setIsDispatched(Boolean isDispatched) {
+        this.isDispatched = isDispatched;
     }
 }

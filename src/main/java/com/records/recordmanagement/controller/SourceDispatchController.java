@@ -40,15 +40,21 @@ public class SourceDispatchController {
         sourceDispatchRepository.deleteById(id);
     }
 
-    // ✅ LIST ALL
+    // ✅ LIST ALL (only non-dispatched) - for Source Dispatch page
     @GetMapping
     public List<SourceDispatch> getAll() {
-        return sourceDispatchRepository.findAll();
+        return sourceDispatchRepository.findByIsDispatchedFalse();
     }
 
-    // ✅ LIST BY RICEMILL
+    // ✅ LIST BY RICEMILL (only non-dispatched) - for adding to destination
     @GetMapping("/ricemill/{id}")
     public List<SourceDispatch> getByRiceMill(@PathVariable Long id) {
         return sourceDispatchRepository.findByRiceMillId(id);
+    }
+
+    // ✅ NEW: LIST ALL RECORDS BY RICEMILL (including dispatched) - for Rice Mill Details page
+    @GetMapping("/ricemill/{id}/all")
+    public List<SourceDispatch> getAllByRiceMill(@PathVariable Long id) {
+        return sourceDispatchRepository.findAllByRiceMillId(id);
     }
 }

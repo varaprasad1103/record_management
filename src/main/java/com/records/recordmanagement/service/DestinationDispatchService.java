@@ -39,6 +39,11 @@ public class DestinationDispatchService {
                 .findById(dispatch.getSourceDispatch().getId())
                 .orElseThrow(() -> new RuntimeException("SourceDispatch not found"));
 
+        // ✅ NEW: Check if source is already dispatched
+        if (source.getIsDispatched()) {
+            throw new RuntimeException("This source dispatch has already been dispatched to a destination");
+        }
+
         // 1️⃣ Calculate destination total
         double destinationAmount = dispatch.getQuantity() * dispatch.getRate();
         dispatch.setTotalAmount(destinationAmount);
@@ -63,6 +68,10 @@ public class DestinationDispatchService {
         record.setPoNumber(savedDestination.getPoNumber());
 
         vehiclesRecordRepository.save(record);
+
+        // ✅ 5️⃣ CRITICAL: Mark source as dispatched so it won't appear in source list anymore
+        source.setIsDispatched(true);
+        sourceDispatchRepository.save(source);
 
         return savedDestination;
     }
