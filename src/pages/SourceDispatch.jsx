@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from "react";
 import "../styles/SourceDispatch.css";
-import * as XLSX from "xlsx";
+/* import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import autoTable from "jspdf-autotable"; */
 import { useCallback } from "react";
 
 
 function SourceDispatch() {
-  const [mills, setMills] = useState([]);
+  const [mills, setMills] = useState([]); 
   const [dispatches, setDispatches] = useState([]);
-  const [editingId, setEditingId] = useState(null);
+  /* const [editingId, setEditingId] = useState(null); */
 
   const authHeader = () => ({
     "Content-Type": "application/json",
     "Authorization": "Bearer " + localStorage.getItem("token")
   });
 
-  const [form, setForm] = useState({
+  /* const [form, setForm] = useState({
     riceMillId: "",
     date: "",
     vehicleNo: "",
     quantity: "",
     rate: ""
-  });
+  }); */
 
   const loadDispatches = useCallback(() => {
     fetch("http://localhost:8080/source-dispatch", {
@@ -59,7 +59,7 @@ function SourceDispatch() {
     window.location.reload();
   };
 
-  const handleChange = (e) => {
+  /* const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
@@ -118,10 +118,10 @@ function SourceDispatch() {
         handleCancel();
       })
       .catch(handleAuthError);
-  };
+  }; */
 
   // DELETE
-  const handleDelete = (id) => {
+  /* const handleDelete = (id) => {
     if (!window.confirm("Delete this dispatch?")) return;
 
     fetch(`http://localhost:8080/source-dispatch/${id}`, {
@@ -133,9 +133,9 @@ function SourceDispatch() {
         loadDispatches();
       })
       .catch(handleAuthError);
-  };
+  }; */
 
-  const exportSourceExcel = () => {
+  /* const exportSourceExcel = () => {
     const data = [...dispatches, { vehicleNo: "TOTAL", totalAmount: totalSource }];
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
@@ -152,7 +152,7 @@ function SourceDispatch() {
     rows.push(["", "TOTAL", "", "", totalSource]);
     autoTable(doc, { head: [["ID", "Vehicle", "Qty", "Rate", "Total"]], body: rows });
     doc.save("SourceDispatch.pdf");
-  };
+  }; */
 
   const totalSource = dispatches.reduce(
     (sum, d) => sum + Number(d.totalAmount || 0),
@@ -163,7 +163,7 @@ function SourceDispatch() {
     <div className="source-container">
       <h2>Source Dispatch</h2>
 
-      <form className="source-form" onSubmit={handleSubmit}>
+      {/* <form className="source-form" onSubmit={handleSubmit}>
         <select name="riceMillId" value={form.riceMillId} onChange={handleChange} required>
           <option value="">Select Rice Mill</option>
           {mills.map(m => (
@@ -183,10 +183,10 @@ function SourceDispatch() {
             Cancel
           </button>
         )}
-      </form>
+      </form> */}
 
-      <button className="export-btn" onClick={exportSourceExcel}>Excel</button>
-      <button className="export-btn pdf-btn" onClick={exportSourcePDF}>PDF</button>
+      {/* <button className="export-btn" onClick={exportSourceExcel}>Excel</button>
+      <button className="export-btn pdf-btn" onClick={exportSourcePDF}>PDF</button> */}
 
       <table className="source-table">
         <thead>
@@ -213,8 +213,8 @@ function SourceDispatch() {
               <td>{d.rate}</td>
               <td>₹{d.totalAmount}</td>
               <td>
-                <button className="action-btn edit-btn" onClick={() => handleEdit(d)}>Edit</button>
-                <button className="action-btn delete-btn" onClick={() => handleDelete(d.id)}>Delete</button>
+                {/* <button className="action-btn edit-btn" onClick={() => handleEdit(d)}>Edit</button>
+                <button className="action-btn delete-btn" onClick={() => handleDelete(d.id)}>Delete</button> */}
               </td>
             </tr>
           ))}

@@ -5,11 +5,10 @@ import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-
 function DestinationDispatch() {
     const [sources, setSources] = useState([]);
     const [destinations, setDestinations] = useState([]);
-
+    const [selectedSource, setSelectedSource] = useState(null);
 
     const [form, setForm] = useState({
         sourceDispatchId: "",
@@ -37,7 +36,30 @@ function DestinationDispatch() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
+        
+        // When source dispatch changes, auto-fill vehicle number AND quantity
+        if (name === "sourceDispatchId") {
+            const selected = sources.find(s => s.id === parseInt(value));
+            if (selected) {
+                setSelectedSource(selected);
+                setForm(prev => ({ 
+                    ...prev, 
+                    sourceDispatchId: value,
+                    vehicleNo: selected.vehicleNo,
+                    quantity: selected.quantity
+                }));
+            } else {
+                setSelectedSource(null);
+                setForm(prev => ({ 
+                    ...prev, 
+                    sourceDispatchId: value,
+                    vehicleNo: "",
+                    quantity: ""
+                }));
+            }
+        } else {
+            setForm(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSubmit = (e) => {
@@ -56,6 +78,14 @@ function DestinationDispatch() {
                 poNumber: form.poNumber
             })
         })
+            .then(res => {
+                if (!res.ok) {
+                    return res.text().then(text => {
+                        throw new Error(text || 'Failed to save destination dispatch');
+                    });
+                }
+                return res.json();
+            })
             .then(() => {
                 loadDestinations();
                 setForm({
@@ -67,8 +97,14 @@ function DestinationDispatch() {
                     rate: "",
                     poNumber: ""
                 });
+                setSelectedSource(null);
+                alert("Destination dispatch saved successfully!");
+            })
+            .catch(err => {
+                alert("Error: " + err.message);
             });
     };
+
     const exportDestinationExcel = () => {
         const data = [...destinations, { destinationName: "TOTAL", totalAmount: totalDestination }];
         const ws = XLSX.utils.json_to_sheet(data);
@@ -77,6 +113,7 @@ function DestinationDispatch() {
         const buf = XLSX.write(wb, { bookType: "xlsx", type: "array" });
         saveAs(new Blob([buf]), "DestinationDispatch.xlsx");
     };
+
     const exportDestinationPDF = () => {
         const doc = new jsPDF();
         const rows = destinations.map(d => [
@@ -92,9 +129,6 @@ function DestinationDispatch() {
         0
     );
 
-
-
-
     return (
         <div className="destination-container">
             <h2>Destination Dispatch</h2>
@@ -109,7 +143,7 @@ function DestinationDispatch() {
                     <option value="">Select Source Dispatch</option>
                     {sources.map(s => (
                         <option key={s.id} value={s.id}>
-                            #{s.id} - {s.vehicleNo}
+                            #{s.id} - {s.vehicleNo} ({s.quantity} kg)
                         </option>
                     ))}
                 </select>
@@ -134,8 +168,13 @@ function DestinationDispatch() {
                     name="vehicleNo"
                     placeholder="Vehicle No"
                     value={form.vehicleNo}
-                    onChange={handleChange}
+                    readOnly
                     required
+                    style={{ 
+                        backgroundColor: '#f0f0f0',
+                        cursor: 'not-allowed'
+                    }}
+                    title="Auto-filled from source dispatch"
                 />
 
                 <input
@@ -143,8 +182,13 @@ function DestinationDispatch() {
                     name="quantity"
                     placeholder="Quantity"
                     value={form.quantity}
-                    onChange={handleChange}
+                    readOnly
                     required
+                    style={{ 
+                        backgroundColor: '#f0f0f0',
+                        cursor: 'not-allowed'
+                    }}
+                    title="Auto-filled from source dispatch"
                 />
 
                 <input
@@ -165,6 +209,22 @@ function DestinationDispatch() {
 
                 <button type="submit">Save</button>
             </form>
+
+            {selectedSource && (
+                <div style={{
+                    padding: '10px',
+                    backgroundColor: '#e3f2fd',
+                    borderRadius: '5px',
+                    marginBottom: '10px',
+                    fontSize: '14px'
+                }}>
+                    <strong>Selected Source:</strong> #{selectedSource.id} | 
+                    Vehicle: {selectedSource.vehicleNo} | 
+                    Quantity: {selectedSource.quantity} kg | 
+                    Rate: ₹{selectedSource.rate}
+                </div>
+            )}
+
             <button className="export-btn" onClick={exportDestinationExcel}>Excel</button>
             <button className="export-btn pdf-btn" onClick={exportDestinationPDF}>PDF</button>
 
@@ -203,7 +263,6 @@ function DestinationDispatch() {
                         </td>
                         <td>₹{totalDestination}</td>
                     </tr>
-
                 </tbody>
             </table>
         </div>

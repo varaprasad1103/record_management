@@ -70,49 +70,6 @@ function Dashboard() {
     <div className="dashboard-container">
       <h2>Dashboard</h2>
 
-      {/* Debug Information */}
-      <div style={{ 
-        padding: '10px', 
-        marginBottom: '20px', 
-        background: '#f0f0f0', 
-        borderRadius: '5px',
-        fontSize: '13px',
-        fontFamily: 'monospace'
-      }}>
-        <strong>Debug Info:</strong> {debugInfo}
-        <br />
-        <strong>Loading:</strong> {loading ? 'Yes' : 'No'}
-        <br />
-        <strong>Error:</strong> {error || 'None'}
-        <br />
-        <strong>Records Count:</strong> {records.length}
-      </div>
-
-      {loading && (
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-          <p>Loading vehicle records...</p>
-        </div>
-      )}
-
-      {error && (
-        <div style={{ 
-          color: 'red', 
-          padding: '20px', 
-          background: '#fee', 
-          borderRadius: '8px',
-          marginBottom: '20px'
-        }}>
-          <p><strong>Error:</strong> {error}</p>
-          <div style={{ marginTop: '15px' }}>
-            <p><strong>Quick Checks:</strong></p>
-            <ol style={{ textAlign: 'left', fontSize: '14px' }}>
-              <li>Is Spring Boot running? Check your IDE/terminal</li>
-              <li>Try this link: <a href="http://localhost:8080/vehicle-records" target="_blank" rel="noopener noreferrer">http://localhost:8080/vehicle-records</a></li>
-              <li>Check if port 8080 is in use by another app</li>
-            </ol>
-          </div>
-        </div>
-      )}
 
       {!loading && !error && (
         <div className="card-grid">

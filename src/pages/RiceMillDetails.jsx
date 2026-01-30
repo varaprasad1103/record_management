@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "../styles/RiceMills.css";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable"; 
 
 function RiceMillDetails({ millId, goBack }) {
 
@@ -84,6 +88,66 @@ function RiceMillDetails({ millId, goBack }) {
     loadAdvances();
   };
 
+  // Calculate total dispatch
+  const totalDispatch = records.reduce(
+    (sum, r) => sum + (r.totalAmount || r.quantity * r.rate || 0),
+    0
+  );
+
+  // EXPORT EXCEL
+  const exportSourceExcel = () => {
+    const data = records.map(r => ({
+      Date: new Date(r.date).toLocaleDateString(),
+      Vehicle: r.vehicleNo,
+      Quantity: r.quantity,
+      Rate: r.rate,
+      Total: (r.totalAmount || r.quantity * r.rate).toFixed(2)
+    }));
+    
+    // Add total row
+    data.push({
+      Date: "",
+      Vehicle: "TOTAL",
+      Quantity: "",
+      Rate: "",
+      Total: totalDispatch.toFixed(2)
+    });
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "SourceDispatch");
+    const buf = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    saveAs(new Blob([buf]), `${mill.name}_SourceDispatch.xlsx`);
+  };
+
+  // EXPORT PDF
+  const exportSourcePDF = () => {
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(16);
+    doc.text(`Source Dispatch - ${mill.name}`, 14, 15);
+    
+    const rows = records.map(r => [
+      new Date(r.date).toLocaleDateString(),
+      r.vehicleNo,
+      r.quantity,
+      r.rate,
+      (r.totalAmount || r.quantity * r.rate).toFixed(2)
+    ]);
+    
+    // Add total row
+    rows.push(["", "TOTAL", "", "", totalDispatch.toFixed(2)]);
+    
+    autoTable(doc, { 
+      head: [["Date", "Vehicle", "Quantity", "Rate", "Total (₹)"]], 
+      body: rows,
+      startY: 25
+    });
+    
+    doc.save(`${mill.name}_SourceDispatch.pdf`);
+  }; 
+
   // ADD DISPATCH
   const handleSubmit = async e => {
     e.preventDefault();
@@ -105,11 +169,6 @@ function RiceMillDetails({ millId, goBack }) {
 
   if (loading) return <p>Loading...</p>;
   if (!mill) return null;
-
-  const totalDispatch = records.reduce(
-    (sum, r) => sum + (r.totalAmount || r.quantity * r.rate || 0),
-    0
-  );
 
   const balance = totalDispatch - advanceTotal;
 
@@ -199,6 +258,8 @@ function RiceMillDetails({ millId, goBack }) {
 
       {/* DISPATCH TABLE */}
       <h2>Records for {mill.name}</h2>
+      <button className="export-btn" onClick={exportSourceExcel}>Excel</button>
+      <button className="export-btn pdf-btn" onClick={exportSourcePDF}>PDF</button>
 
       <table className="ricemill-table">
         <thead>
