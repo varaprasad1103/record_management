@@ -22,13 +22,21 @@ public class DestinationDispatchController {
         this.destinationDispatchRepository = destinationDispatchRepository;
     }
 
+    // CREATE
     @PostMapping
     public DestinationDispatch create(@RequestBody DestinationDispatch dispatch) {
         return destinationDispatchService.saveDestination(dispatch);
     }
 
+    // GET ALL
     @GetMapping
     public List<DestinationDispatch> getAll() {
         return destinationDispatchRepository.findAll();
+    }
+
+    // NEW: GET BY DESTINATION COMPANY
+    @GetMapping("/company/{companyId}")
+    public List<DestinationDispatch> getByCompany(@PathVariable Long companyId) {
+        return destinationDispatchRepository.findByDestinationCompanyId(companyId);
     }
 }

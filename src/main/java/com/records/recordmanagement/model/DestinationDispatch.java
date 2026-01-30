@@ -5,33 +5,30 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "destination_dispatch")
-public class    DestinationDispatch {
+public class DestinationDispatch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 🔗 Relationship to SourceDispatch (MANDATORY)
+    // 🔗 Link to DestinationCompany (NEW!)
+    @ManyToOne
+    @JoinColumn(name = "destination_company_id", nullable = false)
+    private DestinationCompany destinationCompany;
+
+    // 🔗 Link to SourceDispatch
     @ManyToOne
     @JoinColumn(name = "source_dispatch_id", nullable = false)
     private SourceDispatch sourceDispatch;
 
     private LocalDate date;
-
-    private String destinationName;
-
     private String vehicleNo;
-
     private Double quantity;
-
     private Double rate;
-
     private Double totalAmount;
-
     private String poNumber;
 
-    public DestinationDispatch() {
-    }
+    public DestinationDispatch() {}
 
     // ===== Getters & Setters =====
 
@@ -41,6 +38,14 @@ public class    DestinationDispatch {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public DestinationCompany getDestinationCompany() {
+        return destinationCompany;
+    }
+
+    public void setDestinationCompany(DestinationCompany destinationCompany) {
+        this.destinationCompany = destinationCompany;
     }
 
     public SourceDispatch getSourceDispatch() {
@@ -57,14 +62,6 @@ public class    DestinationDispatch {
 
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public String getDestinationName() {
-        return destinationName;
-    }
-
-    public void setDestinationName(String destinationName) {
-        this.destinationName = destinationName;
     }
 
     public String getVehicleNo() {

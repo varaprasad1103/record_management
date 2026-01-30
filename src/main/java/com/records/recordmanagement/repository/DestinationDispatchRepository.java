@@ -6,5 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface DestinationDispatchRepository extends JpaRepository<DestinationDispatch, Long> {
+    
     List<DestinationDispatch> findBySourceDispatchId(Long sourceId);
+    
+    // NEW: Get all dispatches for a specific destination company
+    List<DestinationDispatch> findByDestinationCompanyId(Long companyId);
 }
